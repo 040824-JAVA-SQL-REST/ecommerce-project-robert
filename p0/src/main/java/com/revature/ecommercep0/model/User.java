@@ -1,42 +1,34 @@
 package com.revature.ecommercep0.model;
 
 public class User {
-    private boolean isCPU;
-    private int win;
-    private int lose;
-    private int draw;
-    private String name;
-    public boolean isCPU() {
-        return isCPU;
+    private String email;
+    private String fname;
+    private String lname;
+    private String password;
+    public String getEmail() {
+        return email;
     }
-    public void setCPU(boolean isCPU) {
-        this.isCPU = isCPU;
+    public void setEmail(String email) {
+        this.email = email;
     }
-    public int getWin() {
-        return win;
+    public String getFname() {
+        return fname;
     }
-    public void setWin(int win) {
-        this.win = win;
+    public void setFname(String fname) {
+        this.fname = fname;
     }
-    public int getLose() {
-        return lose;
+    public String getLname() {
+        return lname;
     }
-    public void setLose(int lose) {
-        this.lose = lose;
+    public void setLname(String lname) {
+        this.lname = lname;
     }
-    public int getDraw() {
-        return draw;
+    public String getPassword() {
+        return password;
     }
-    public void setDraw(int draw) {
-        this.draw = draw;
+    public void setPassword(String password) {
+        this.password = password;
     }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }    
-    
 
     
 }
