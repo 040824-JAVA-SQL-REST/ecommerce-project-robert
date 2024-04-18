@@ -1,6 +1,7 @@
 package com.revature.ecommercep0.model;
 
 public class Role {
+    private String role_id;
     private String name;
     
     
