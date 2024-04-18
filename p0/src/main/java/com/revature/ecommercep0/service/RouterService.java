@@ -2,6 +2,7 @@ package com.revature.ecommercep0.service;
 
 import java.util.Scanner;
 
+import com.revature.ecommercep0.model.Role;
 import com.revature.ecommercep0.model.User;
 import com.revature.ecommercep0.screens.BaseScreen;
 import com.revature.ecommercep0.screens.RegisterScreen;

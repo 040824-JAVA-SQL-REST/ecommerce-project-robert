@@ -2,7 +2,9 @@ package com.revature.ecommercep0.screens;
 
 import java.util.Scanner;
 
+import com.revature.ecommercep0.model.Role;
 import com.revature.ecommercep0.model.User;
+import com.revature.ecommercep0.service.RoleService;
 import com.revature.ecommercep0.service.RouterService;
 import com.revature.ecommercep0.service.UserService;
 
@@ -24,7 +26,9 @@ public class RegisterScreen extends BaseScreen {
         while (true) {
             clearScreen();
             System.out.println("In Registration Mode...");
-
+            for (User s: userService.findAll()) {
+                System.out.println(s.getEmail());
+            }
             System.out.println("\nEmail: ");
             String email = scan.nextLine();
 
@@ -35,12 +39,12 @@ public class RegisterScreen extends BaseScreen {
                 continue;
             }
 
-            // if (!userService.isUniqueEmail(email)) {
-            //     clearScreen();
-            //     System.out.println("Email is already taken");
-            //     pause(scan);
-            //     continue;
-            // }
+            if (!userService.isUniqueEmail(email)) {
+                clearScreen();
+                System.out.println("Email is already taken");
+                pause(scan);
+                continue;
+            }
             newUser.setEmail(email);
 
             while (true) {
@@ -67,10 +71,14 @@ public class RegisterScreen extends BaseScreen {
                 System.out.println("\nLast name: ");
                 String lname = scan.nextLine();
                 newUser.setLname(lname);
-
-    
+                Role newRole = new Role();
+                newUser.setRole_id(newRole.getRole_id());
             // save logic
-            userService.save(newUser);
+           userService.save(newUser);
+
+           clearScreen();
+           System.out.println("Account created successfully");
+           pause(scan);
             //TODO: Implement userDao.save using Javalin
         }
     }
