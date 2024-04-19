@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import com.revature.ecommercep0.dao.RoleDao;
 import com.revature.ecommercep0.dao.UserDao;
+import com.revature.ecommercep0.model.User;
 import com.revature.ecommercep0.screens.StartScreen;
 import com.revature.ecommercep0.service.RoleService;
 import com.revature.ecommercep0.service.RouterService;
@@ -21,11 +22,15 @@ public class App
     public static void main(String[] args ) throws SQLException, IOException
     {
         Scanner scan = new Scanner(System.in);
+        User session = new User();
 
         System.out.println(ConnectionFactory.getInstance().getConnection());
 
-        new RouterService(scan, new UserService(new UserDao(), new RoleService(new RoleDao()))).navigate("/start").startInterface();
+        new RouterService(scan, new App().getUserService(), session).navigate("/start").startInterface();
 
         scan.close();
+    }
+    private UserService getUserService() {
+        return  new UserService(new UserDao(), new RoleService(new RoleDao()));
     }
 }

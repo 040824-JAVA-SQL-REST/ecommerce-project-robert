@@ -2,6 +2,8 @@ package com.revature.ecommercep0.screens;
 
 import java.util.Scanner;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.revature.ecommercep0.model.Role;
 import com.revature.ecommercep0.model.User;
 import com.revature.ecommercep0.service.RoleService;
@@ -58,7 +60,8 @@ public class RegisterScreen extends BaseScreen {
                     pause(scan);
                     continue;
                 }
-                newUser.setPassword(password);
+                String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12)); //one way, cant be decrypted
+                newUser.setPassword(hashedPassword);
                 break;
             }
 
@@ -79,6 +82,7 @@ public class RegisterScreen extends BaseScreen {
            clearScreen();
            System.out.println("Account created successfully");
            pause(scan);
+           routerService.navigate("/start");
             //TODO: Implement userDao.save using Javalin
         }
     }
