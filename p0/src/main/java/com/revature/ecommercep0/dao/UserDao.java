@@ -73,6 +73,5 @@ public class UserDao implements CrudDao<User> {
             throw new RuntimeException("Cannot find application.properties file");
         }
         return allUsers;
-    }
-    
+    }   
 }

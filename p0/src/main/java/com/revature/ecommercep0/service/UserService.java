@@ -27,10 +27,8 @@ public class UserService { // here we do validations for registration
         }
         return true;
     }
-
     public boolean isValidPassword(String password) {
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
-
     }
 
     public boolean isValidEmail(String email) {
@@ -41,18 +39,22 @@ public class UserService { // here we do validations for registration
     public Optional<User> login(String email, String password) {
         Optional<User> optUser = userDao.findAll().stream()
                 .filter(u -> u.getEmail().equals(email) && BCrypt.checkpw(password, u.getPassword())).findFirst();
-        return optUser;
-         
+        return optUser;   
     }
-
     public User save(User user) {
         String defaultId = roleService.getRoleIdByName("USER");
         if (defaultId.isEmpty() || defaultId == null) {
             throw new ResourceNotFoundException("USER role not found!");
         }
-
         user.setRole_id(defaultId);
         return userDao.save(user);
+    }
+    public boolean isAdmin(User user) {
+        String currentRole = user.getRole_id(); 
+        if (currentRole.equals(roleService.getRoleIdByName("ADMIN"))) {
+            return true;
+        }
+        return false;
     }
 
     public List<User> findAll() {

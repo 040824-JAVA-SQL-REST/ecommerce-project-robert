@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import com.revature.ecommercep0.dao.ProductDao;
 import com.revature.ecommercep0.dao.RoleDao;
 import com.revature.ecommercep0.dao.UserDao;
+import com.revature.ecommercep0.model.Product;
 import com.revature.ecommercep0.model.User;
 import com.revature.ecommercep0.screens.StartScreen;
+import com.revature.ecommercep0.service.ProductService;
 import com.revature.ecommercep0.service.RoleService;
 import com.revature.ecommercep0.service.RouterService;
 import com.revature.ecommercep0.service.UserService;
@@ -26,11 +29,14 @@ public class App
 
         System.out.println(ConnectionFactory.getInstance().getConnection());
 
-        new RouterService(scan, new App().getUserService(), session).navigate("/start").startInterface();
+        new RouterService(scan, new App().getUserService(), session, new App().getProductService() ).navigate("/start").startInterface();
 
         scan.close();
     }
     private UserService getUserService() {
         return  new UserService(new UserDao(), new RoleService(new RoleDao()));
+    }
+    private ProductService getProductService() {
+        return new ProductService(new ProductDao());
     }
 }

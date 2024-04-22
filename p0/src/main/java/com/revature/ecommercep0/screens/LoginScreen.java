@@ -13,15 +13,12 @@ public class LoginScreen extends BaseScreen {
     private final UserService userService;
     private final RouterService routerService;
 
-
     public LoginScreen(Scanner scan, User session, UserService userService, RouterService routerService) {
         this.scan = scan;
         this.session = session;
         this.userService = userService;
         this.routerService = routerService;
     }
-
-
 
     @Override
     public void startInterface() {
@@ -46,11 +43,14 @@ public class LoginScreen extends BaseScreen {
                 session.setFname(temp.getFname());
                 session.setLname(temp.getLname());
                 session.setRole_id(temp.getRole_id());
-                
-                routerService.navigate("/home").startInterface();
-                break; //might not need "else"
+
+                if (userService.isAdmin(temp)) {
+                  routerService.navigate("/admin").startInterface();
+                }
+                  routerService.navigate("/home").startInterface();
+                    break; // might not need "else"
             }
-            
+
         }
 
     }
