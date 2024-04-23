@@ -9,6 +9,9 @@ public class CartService {
     public CartService(CartDao cartDao) {
         this.cartDao = cartDao;
     }
+    public Cart findCartById(String cart_id) {
+        return cartDao.findById(cart_id);
+    }
     public Cart createNewCart(Cart cart) {
         Cart isFound = cartDao.findByUserId(cart.getUser_id());
         if (isFound == null) { //if cart isnt already in the db, we save it 
@@ -26,6 +29,7 @@ public class CartService {
         cartDao.updateCartPriceById(newPrice, cart.getId());
         return cart;
     }
+
     public double convertCartTotalCostStrToInt(Cart cart) {
         return Double.parseDouble(cart.getTotal_cost());
     }

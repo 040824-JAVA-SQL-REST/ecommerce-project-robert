@@ -52,4 +52,7 @@ public class ProductService {
     public void deleteProductFromCatalog(String name) {
         productDao.updateProductAvailabilityByName(name, false);
     }
+    public Product findProductById(String product_id) {
+        return productDao.findById(product_id);
+    }
 }

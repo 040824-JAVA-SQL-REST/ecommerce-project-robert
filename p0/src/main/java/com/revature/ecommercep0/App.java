@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import com.revature.ecommercep0.controller.UserController;
 import com.revature.ecommercep0.dao.CartDao;
+import com.revature.ecommercep0.dao.CartHistoryDao;
 import com.revature.ecommercep0.dao.OrderDao;
 import com.revature.ecommercep0.dao.ProductDao;
 import com.revature.ecommercep0.dao.RoleDao;
@@ -13,6 +14,7 @@ import com.revature.ecommercep0.dao.UserDao;
 import com.revature.ecommercep0.model.Product;
 import com.revature.ecommercep0.model.User;
 import com.revature.ecommercep0.screens.StartScreen;
+import com.revature.ecommercep0.service.CartHistoryService;
 import com.revature.ecommercep0.service.CartService;
 import com.revature.ecommercep0.service.OrderService;
 import com.revature.ecommercep0.service.ProductService;
@@ -46,7 +48,7 @@ public class App
 
         System.out.println(ConnectionFactory.getInstance().getConnection());
 
-        new RouterService(scan, new App().getUserService(), session, new App().getProductService(), new App().getOrderService(), new CartService(new CartDao()) ).navigate("/start").startInterface();
+        new RouterService(scan, new App().getUserService(), session, new App().getProductService(), new App().getOrderService(), new CartService(new CartDao()), new CartHistoryService(new CartHistoryDao()) ).navigate("/start").startInterface();
 
         scan.close();
     }

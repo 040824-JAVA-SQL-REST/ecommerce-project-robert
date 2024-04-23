@@ -72,7 +72,7 @@ public class CartDao implements CrudDao<Cart> {
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                newCart = new Cart(rs.getString("id"), id, rs.getString("total_cost"), rs.getBoolean("is_CheckedOut"));
+                newCart = new Cart(rs.getString("id"), rs.getString("user_id"), rs.getString("total_cost"), rs.getBoolean("is_CheckedOut"));
             }
         } catch (SQLException e) {
             throw new RuntimeException("CAnnot connect to the database");

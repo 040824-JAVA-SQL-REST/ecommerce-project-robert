@@ -1,10 +1,13 @@
 com/revature/ecommercep0/screens/RegisterScreen.class
 com/revature/ecommercep0/screens/HomeScreen.class
+com/revature/ecommercep0/service/TokenService.class
 com/revature/ecommercep0/screens/AdminScreen.class
 com/revature/ecommercep0/screens/StartScreen.class
 com/revature/ecommercep0/utils/ConnectionFactory.class
 com/revature/ecommercep0/model/Role.class
 com/revature/ecommercep0/App.class
+com/revature/ecommercep0/service/CartService.class
+com/revature/ecommercep0/controller/UserController.class
 com/revature/ecommercep0/service/RoleService.class
 com/revature/ecommercep0/dao/UserDao.class
 com/revature/ecommercep0/service/UserService.class
@@ -12,9 +15,12 @@ com/revature/ecommercep0/service/ProductService.class
 com/revature/ecommercep0/dao/OrderDao.class
 com/revature/ecommercep0/dao/ProductDao.class
 com/revature/ecommercep0/model/User.class
+com/revature/ecommercep0/dto/request/NewRegisterRequest.class
 com/revature/ecommercep0/service/RouterService.class
 com/revature/ecommercep0/service/OrderService.class
+com/revature/ecommercep0/dao/CartDao.class
 com/revature/ecommercep0/dao/CrudDao.class
+com/revature/ecommercep0/model/Cart.class
 com/revature/ecommercep0/screens/BaseScreen.class
 com/revature/ecommercep0/model/Order.class
 com/revature/ecommercep0/dao/RoleDao.class

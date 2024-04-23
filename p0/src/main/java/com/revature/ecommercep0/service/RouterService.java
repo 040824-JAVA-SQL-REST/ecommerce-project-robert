@@ -20,14 +20,16 @@ public class RouterService {
     private ProductService productService;
     private OrderService orderService;
     private CartService cartService;
+    private CartHistoryService cartHistoryService;
 
-    public RouterService(Scanner scan, UserService userService, User session, ProductService productService, OrderService orderService, CartService cartService) {
+    public RouterService(Scanner scan, UserService userService, User session, ProductService productService, OrderService orderService, CartService cartService, CartHistoryService cartHistoryService) {
         this.scan = scan;
         this.userService = userService;
         this.session = session;
         this.productService = productService;
         this.orderService = orderService;
         this.cartService = cartService;
+        this.cartHistoryService = cartHistoryService;
 
     }
 
@@ -42,7 +44,7 @@ public class RouterService {
             case "/home":
                 return new HomeScreen(session, scan, productService);
             case "/admin":
-                return new AdminScreen(scan, session, productService, this, orderService, cartService);
+                return new AdminScreen(scan, session, productService, this, orderService, cartService, cartHistoryService);
         }
         return null;
     }
