@@ -2,6 +2,8 @@ package com.revature.ecommercep0.service;
 
 import java.util.Scanner;
 
+import com.revature.ecommercep0.model.Cart;
+import com.revature.ecommercep0.model.Order;
 import com.revature.ecommercep0.model.Role;
 import com.revature.ecommercep0.model.User;
 import com.revature.ecommercep0.screens.AdminScreen;
@@ -16,12 +18,17 @@ public class RouterService {
     private  UserService userService;
     private User session;
     private ProductService productService;
+    private OrderService orderService;
+    private CartService cartService;
 
-    public RouterService(Scanner scan, UserService userService, User session, ProductService productService) {
+    public RouterService(Scanner scan, UserService userService, User session, ProductService productService, OrderService orderService, CartService cartService) {
         this.scan = scan;
         this.userService = userService;
         this.session = session;
         this.productService = productService;
+        this.orderService = orderService;
+        this.cartService = cartService;
+
     }
 
     public BaseScreen navigate(String path) {
@@ -35,7 +42,7 @@ public class RouterService {
             case "/home":
                 return new HomeScreen(session, scan, productService);
             case "/admin":
-                return new AdminScreen(scan, session, productService, this);
+                return new AdminScreen(scan, session, productService, this, orderService, cartService);
         }
         return null;
     }

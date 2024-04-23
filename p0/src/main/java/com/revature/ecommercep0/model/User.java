@@ -9,7 +9,6 @@ public class User {
     private String lname;
     private String password;
     private String role_id; //Foreign key to tie to roles table
-    
 
     public String getId() {
         return id;

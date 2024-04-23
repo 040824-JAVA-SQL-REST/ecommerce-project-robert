@@ -12,9 +12,16 @@ public class Order {
     private Date orderDate;
     private String user_id; // Many-to-One relationship with User
 
+    public Order(String totalPrice, String status, String user_id) {
+        this.id = UUID.randomUUID().toString();
+       // this.products = products;
+        this.totalPrice = totalPrice;
+        this.status = status;
+        this.user_id = user_id;
+    }
+
     public Order() {
         this.id = UUID.randomUUID().toString();
-        this.orderDate = new Date(0);
     }
     public String getId() {
         return id;
