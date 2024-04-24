@@ -24,7 +24,7 @@ public class CartHistoryDao implements CrudDao<CartHistory> {
             ps.setString(3, obj.getQuantity());
             int rowsUpdated = ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("CAnnot connect to the database");
+            throw new RuntimeException("CAnnot connect to the database, or item is already in cart please update by quantity.");
         } catch (IOException e) {
             throw new RuntimeException("Cannot find application.properties file");
         }

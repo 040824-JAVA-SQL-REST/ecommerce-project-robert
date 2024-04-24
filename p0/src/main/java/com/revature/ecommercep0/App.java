@@ -48,7 +48,7 @@ public class App
 
         System.out.println(ConnectionFactory.getInstance().getConnection());
 
-        new RouterService(scan, new App().getUserService(), session, new App().getProductService(), new App().getOrderService(), new CartService(new CartDao()), new CartHistoryService(new CartHistoryDao()) ).navigate("/start").startInterface();
+        new RouterService(scan, new App().getUserService(), session, new App().getProductService(), new App().getOrderService(), new CartService(new CartDao()), new CartHistoryService(new CartHistoryDao(), new CartService(new CartDao()), new App().getProductService())).navigate("/start").startInterface();
 
         scan.close();
     }

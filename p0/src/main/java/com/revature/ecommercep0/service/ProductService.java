@@ -1,5 +1,6 @@
 package com.revature.ecommercep0.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.ecommercep0.dao.ProductDao;
@@ -13,6 +14,16 @@ public class ProductService {
     }
     public List<Product> findAll() {
         return productDao.findAll();
+    }
+    public List<Product> getAllAvailableProductsCatalog() {
+        List<Product> allProducts = productDao.findAll();
+        List<Product> onlyAvailableProducts = new ArrayList<>();
+        for (Product product : allProducts) {
+            if (product.isAvailable()) {
+                onlyAvailableProducts.add(product);
+            }
+        }
+        return onlyAvailableProducts;
     }
     public Product save(Product obj) {
         return productDao.save(obj);
@@ -55,4 +66,8 @@ public class ProductService {
     public Product findProductById(String product_id) {
         return productDao.findById(product_id);
     }
+    public double getTotalProductPrice(String product_id, String quantity) {
+        return CartService.convertCostStrToInt(quantity) * CartService.convertCostStrToInt(findProductById(product_id).getPrice());
+
+   }
 }

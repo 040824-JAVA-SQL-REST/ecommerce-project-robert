@@ -42,10 +42,21 @@ public class AdminScreen extends BaseScreen {
             clearScreen();
             System.out.println("Welcome Admin " + session.getFname());
             // Order newOrder = new Order( "66.66", "PENDING", "1");
-            Cart myCart = new Cart(session.getId());
-            cartService.createNewCart(myCart);
-            cartService.
-            printCartDetails(cartHistoryService.retrieveCartHistoryById("1bdb9291-5106-4fbc-bf5a-bb95c1e036b0"));
+            
+            Cart myCart = cartService.findCartByUserID(session.getId());
+            System.out.println("This is my cart: " + myCart);
+            System.out.println("User_id: " + session.getId());
+            if (myCart == null) {
+                myCart = new Cart(session.getId());
+                System.out.println(myCart.getId());
+                cartService.createNewCart(myCart);
+            }
+            //System.out.println(myCart + "Cart ID: " + myCart.getId() + ", User_Id: " + myCart.getUser_id() + ", total cost: " + myCart.getTotal_cost() + ", is chekedout: " + myCart.isIs_CheckedOut());
+            System.out.println("Cart id: " + myCart.getId());
+            cartHistoryService.addToCart(myCart.getId(), "41", "10"); 
+         //   cartService.createNewCart(myCart);
+         //   CartHistory newCartHistory = cartHistoryService.findCartHistoryById
+            printCartDetails(cartHistoryService.retrieveCartHistoryById(myCart.getId()));
             
 
 
@@ -61,14 +72,15 @@ public class AdminScreen extends BaseScreen {
             // productService.enterNewProductIntoCatalog("Guanaba", "organic purple
             // guanaba", "$5.00", "produce");
 
-           // printProductCatalog(productService.findAll());
+            printProductCatalog(productService.findAll());
             scan.nextLine();
 
         }
     }
     private void printCartDetails(List<CartHistory> cartHistory) {
         for (CartHistory ch : cartHistory) {
-            System.out.println("user: " + cartService.findCartById(ch.getCart_id()).getUser_id() + ", product: " + productService.findProductById(ch.getProduct_id()).getName() +", price: " + productService.findProductById(ch.getProduct_id()).getPrice() + ", quantity: " + ch.getQuantity());
+            Cart cart = cartService.findCartById(ch.getCart_id());
+            System.out.println("Order Details--"+"user: " + cart.getUser_id() + ", product: " + productService.findProductById(ch.getProduct_id()).getName() +", Total price: " + cart.getTotal_cost() + ", quantity: " + ch.getQuantity());
         }
     }
 
@@ -83,7 +95,7 @@ public class AdminScreen extends BaseScreen {
     private void printProductCatalog(List<Product> products) {
         for (Product product : products) {
             if (product.isAvailable()) {
-                System.out.println(product.getName() + " : " + product.getDescription() + " : " + product.getCategory()
+                System.out.println("product id: " + product.getId() + " : " +product.getName() + " : " + product.getDescription() + " : " + product.getCategory()
                         + " : " + product.getPrice());
             }
 

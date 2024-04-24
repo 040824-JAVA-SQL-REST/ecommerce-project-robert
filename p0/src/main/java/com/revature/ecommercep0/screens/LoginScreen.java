@@ -38,6 +38,7 @@ public class LoginScreen extends BaseScreen {
                 pause(scan);
             } else {
                 User temp = optUser.get();
+                session.setId(temp.getId());
                 session.setEmail(temp.getEmail());
                 session.setPassword(temp.getPassword());
                 session.setFname(temp.getFname());

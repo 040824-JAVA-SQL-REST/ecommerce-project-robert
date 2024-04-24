@@ -31,19 +31,20 @@ public class CartDao implements CrudDao<Cart> {
         return obj;
     }
 
-    public Cart updateCartPriceById(String id, String newPrice) {
+    public void updateCartPriceById(String id, String newPrice) {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             PreparedStatement ps = conn.prepareStatement("UPDATE cart SET total_cost = ? where id = ?");
             ps.setString(1, newPrice);
             ps.setString(2, id);
-            ps.executeUpdate();
+            int result = ps.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException("CAnnot connect to the database");
         } catch (IOException e) {
             throw new RuntimeException("Cannot find application.properties file");
         }
-        return findById(id);
+        // Cart temp = findById(id);
+        // return temp;
     }
 
     @Override
@@ -65,11 +66,11 @@ public class CartDao implements CrudDao<Cart> {
     }
 
     @Override
-    public Cart findById(String id) {
+    public Cart findById(String cart_id) {
         Cart newCart = null;
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM cart where id = ?");
-            ps.setString(1, id);
+            ps.setString(1, cart_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 newCart = new Cart(rs.getString("id"), rs.getString("user_id"), rs.getString("total_cost"), rs.getBoolean("is_CheckedOut"));
