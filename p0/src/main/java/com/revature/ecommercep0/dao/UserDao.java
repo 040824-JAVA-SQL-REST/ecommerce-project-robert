@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.ecommercep0.model.Role;
 import com.revature.ecommercep0.model.User;
 import com.revature.ecommercep0.utils.ConnectionFactory;
 
@@ -17,6 +18,32 @@ public class UserDao implements CrudDao<User> {
     public User findById(String id) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    }
+    public List<User> findAllWithRole() {
+        List<User> allUsers = new ArrayList<>();    
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM users_with_role");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User newUser = new User();
+                Role role = new Role();
+                newUser.setId(rs.getString("id"));
+                newUser.setEmail(rs.getString("email"));
+                newUser.setPassword(rs.getString("password"));
+                newUser.setFname(rs.getString("firstname"));
+                newUser.setLname(rs.getString("lastname"));
+                newUser.setRole_id(rs.getString("role_id"));
+                role.setRole_id(rs.getString("role_id"));
+                role.setName(rs.getString("role_name"));
+                newUser.setRole(role);
+                allUsers.add(newUser);
+            }
+        } catch(SQLException e) {
+            throw new RuntimeException("CAnnot connect to the database");
+        } catch(IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        return allUsers;
     }
 
     @Override

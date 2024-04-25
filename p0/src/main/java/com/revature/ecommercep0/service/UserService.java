@@ -7,6 +7,7 @@ import java.util.Scanner;
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.revature.ecommercep0.dao.UserDao;
+import com.revature.ecommercep0.model.Role;
 import com.revature.ecommercep0.model.User;
 import com.revature.ecommercep0.utils.custom_exceptions.ResourceNotFoundException;
 
@@ -27,6 +28,7 @@ public class UserService { // here we do validations for registration
         }
         return true;
     }
+
     public boolean isValidPassword(String password) {
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
     }
@@ -37,20 +39,28 @@ public class UserService { // here we do validations for registration
     }
 
     public Optional<User> login(String email, String password) {
-        Optional<User> optUser = userDao.findAll().stream()
+        Optional<User> optUser = userDao.findAllWithRole().stream()
                 .filter(u -> u.getEmail().equals(email) && BCrypt.checkpw(password, u.getPassword())).findFirst();
-        return optUser;   
+        return optUser;
     }
+
     public User save(User user) {
         String defaultId = roleService.getRoleIdByName("USER");
         if (defaultId.isEmpty() || defaultId == null) {
             throw new ResourceNotFoundException("USER role not found!");
         }
+        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12)); // one way, cant be decrypted
+        user.setPassword(hashedPassword);
+     
+        Role role = new Role();
         user.setRole_id(defaultId);
+        System.out.println("UserID: " + user.getId() + "Email: " + user.getEmail() + ", password: " + user.getPassword() + " ,firstname: "
+        + user.getFname() + " ,lastname: " + user.getLname() + ", Role ID: " + user.getRole_id()) ;
         return userDao.save(user);
     }
+
     public boolean isAdmin(User user) {
-        String currentRole = user.getRole_id(); 
+        String currentRole = user.getRole_id();
         if (currentRole.equals(roleService.getRoleIdByName("ADMIN"))) {
             return true;
         }

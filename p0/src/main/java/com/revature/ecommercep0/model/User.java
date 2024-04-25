@@ -2,6 +2,8 @@ package com.revature.ecommercep0.model;
 
 import java.util.UUID;
 
+import com.revature.ecommercep0.dto.request.NewRegisterRequest;
+
 public class User {
     private String id;
     private String email;
@@ -9,7 +11,16 @@ public class User {
     private String lname;
     private String password;
     private String role_id; //Foreign key to tie to roles table
+    private Role role;
+    
 
+    public User(NewRegisterRequest req) {
+        this.id = UUID.randomUUID().toString();
+        this.email = req.getEmail();
+        this.fname = req.getFirstName();
+        this.lname = req.getLastName();
+        this.password = req.getPassword();
+    }
     public String getId() {
         return id;
     }
@@ -58,4 +69,11 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+    public Role getRole() {
+        return role;
+    }
+    public void setRole(Role role) {
+        this.role = role;
+    }
+    
 }
