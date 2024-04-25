@@ -5,6 +5,7 @@ import com.revature.ecommercep0.model.Cart;
 
 public class CartService {
     private CartDao cartDao;
+    
 
     public CartService(CartDao cartDao) {
         this.cartDao = cartDao;
@@ -25,6 +26,17 @@ public class CartService {
 
     public Cart findCartByUserID(String user_id) {
         return cartDao.findByUserId(user_id);
+    }
+    public void viewCart(Cart cart) {
+        //TODO: View Cart: Provide functionality for users to view the contents of their cart, 
+        // including item details and total cost.
+    }
+ 
+    public void updateCart(Cart cart) {
+        //TOOD: Allow users to update the quantity of items in their cart or remove items altogether.
+    }
+    public void clearCart(Cart cart) {
+        //TODO: Clear cart idk how to yet doe.
     }
 
     public Cart updateCartPrice(Cart cart, String newPrice) {

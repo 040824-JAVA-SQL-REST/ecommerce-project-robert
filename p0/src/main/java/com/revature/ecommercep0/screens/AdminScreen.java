@@ -44,8 +44,10 @@ public class AdminScreen extends BaseScreen {
             // Order newOrder = new Order( "66.66", "PENDING", "1");
             
             Cart myCart = cartService.findCartByUserID(session.getId());
+            
             System.out.println("This is my cart: " + myCart);
             System.out.println("User_id: " + session.getId());
+            System.out.println("Total cart price: " + cartHistoryService.caculateTotal(myCart));
             if (myCart == null) {
                 myCart = new Cart(session.getId());
                 System.out.println(myCart.getId());
@@ -53,7 +55,7 @@ public class AdminScreen extends BaseScreen {
             }
             //System.out.println(myCart + "Cart ID: " + myCart.getId() + ", User_Id: " + myCart.getUser_id() + ", total cost: " + myCart.getTotal_cost() + ", is chekedout: " + myCart.isIs_CheckedOut());
             System.out.println("Cart id: " + myCart.getId());
-            cartHistoryService.addToCart(myCart.getId(), "41", "10"); 
+           // cartHistoryService.addToCart(myCart.getId(), "41", "10"); 
          //   cartService.createNewCart(myCart);
          //   CartHistory newCartHistory = cartHistoryService.findCartHistoryById
             printCartDetails(cartHistoryService.retrieveCartHistoryById(myCart.getId()));
@@ -71,7 +73,7 @@ public class AdminScreen extends BaseScreen {
             // productService.updateProductNameByName("apples", "oranges");
             // productService.enterNewProductIntoCatalog("Guanaba", "organic purple
             // guanaba", "$5.00", "produce");
-
+            System.out.println( productService.updateProductColumnById("category" , "livestock", productService.findProductById("2")));
             printProductCatalog(productService.findAll());
             scan.nextLine();
 

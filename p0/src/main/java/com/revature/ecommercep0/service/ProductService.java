@@ -30,32 +30,14 @@ public class ProductService {
     }
     public Product enterNewProductIntoCatalog(String name, String description, String price, String category) {
         Product newProduct = new Product(name, description, price, category);
-        if (productDao.findByName(name) == null) {
+        if (isUniqueProductName(name)) {
             System.out.println("Product entered!");
             return productDao.save(newProduct);
         }
         return null;
     }
-    public Product updateProductColumnByName(String column, String newColumnValue, String name) {
-        //TODO: make conditiosn to check with column
-        if (column.equals("category")) {
-            return productDao.updateProductCategoryByName(newColumnValue, name);
-        }
-        else if (column.equals("price")) {
-            return productDao.updateProductPriceByName(newColumnValue, name);
-        }
-        return productDao.updateProductColumnByName(column, newColumnValue, name);
-    }
-    public Product updateProductDescriptionByName(String name, String newDescription) {
-        return productDao.updateProductDescriptionByName(name, newDescription);
-    }
-
-    public void updateProductNameByName(String name, String newProductName) {
-       productDao.updateProductNameByName(name, newProductName);   
-    }
-    public Product deleteProductFromCatalog(Product obj) {
-        obj.setAvailable(false);
-        return productDao.save(obj);  
+    public Product updateProductColumnById(String columnName, String newColumnValue, Product product) {
+        return productDao.updateProductColumnById(columnName, newColumnValue, product);
     }
     public void retrieveDeletedProduct(String name ) {
         productDao.updateProductAvailabilityByName(name, true);
@@ -65,6 +47,9 @@ public class ProductService {
     }
     public Product findProductById(String product_id) {
         return productDao.findById(product_id);
+    }
+    public boolean isUniqueProductName(String name) {
+        return (productDao.findByName(name) == null) ? true : false;
     }
     public double getTotalProductPrice(String product_id, String quantity) {
         return CartService.convertCostStrToInt(quantity) * CartService.convertCostStrToInt(findProductById(product_id).getPrice());

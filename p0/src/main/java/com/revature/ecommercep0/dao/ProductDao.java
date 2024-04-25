@@ -164,7 +164,21 @@ public class ProductDao implements CrudDao<Product> {
             throw new RuntimeException("Cannot find application.properties file");
         }
     }
-
+    public Product updateProductColumnById(String columnName, String newColumnValue, Product product) {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String query = "UPDATE products SET " + columnName + " = ? WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, newColumnValue);
+            ps.setString(2, product.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Cannot connect to the database: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties file: " + e.getMessage());
+        }
+        return findById(product.getId());
+    }
+    
     public Product updateProductDescriptionByName(String name, String newDescription) {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             PreparedStatement ps = conn.prepareStatement("UPDATE products SET description = ? where name = ?");
