@@ -81,7 +81,7 @@ public class AdminScreen extends BaseScreen {
     }
     private void printCartDetails(List<CartHistory> cartHistory) {
         for (CartHistory ch : cartHistory) {
-            Cart cart = cartService.getActiveCartFromUser(ch.getCart_id());
+            Cart cart = cartService.findCartById(ch.getCart_id());
             System.out.println("Order Details--"+"user: " + cart.getUser_id() + ", product: " + productService.findProductById(ch.getProduct_id()).getName() +", Total price: " + cart.getTotal_cost() + ", quantity: " + ch.getQuantity());
         }
     }

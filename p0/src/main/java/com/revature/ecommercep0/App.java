@@ -22,6 +22,8 @@ import com.revature.ecommercep0.service.RoleService;
 import com.revature.ecommercep0.service.RouterService;
 import com.revature.ecommercep0.service.UserService;
 import com.revature.ecommercep0.utils.ConnectionFactory;
+import com.revature.ecommercep0.utils.JavalinUtil;
+
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 import io.javalin.Javalin;
@@ -34,15 +36,10 @@ public class App
 {
     public static void main(String[] args ) throws SQLException, IOException
     {
-        App app = new App();
-        UserController userController = new UserController();
-        Javalin.create(config -> {
-            config.router.apiBuilder(() -> {
-                path("users/",() -> {
-                    post("register/", userController::register);
-                }); 
-            });
-        }).start(8080);
+        
+        new JavalinUtil().getJavalin().start(8080);
+
+
         Scanner scan = new Scanner(System.in);
         User session = new User();
 

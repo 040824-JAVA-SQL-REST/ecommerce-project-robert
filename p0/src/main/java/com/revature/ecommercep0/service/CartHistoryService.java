@@ -62,7 +62,7 @@ public class CartHistoryService {
         }
         String totalCartPrice = String.format("%.2f", total);
 
-        // cartService.updateCartPrice(cart, totalCartPrice);
+         cartService.updateCartPrice(cart, totalCartPrice);
         return totalCartPrice;
 
     }
@@ -72,11 +72,12 @@ public class CartHistoryService {
         if (myCart == null)
             return null;
         CartHistory cH = cartHistoryDao.save(new CartHistory(cart_id, product_id, quantity));
-        double currPrice = CartService.convertCartTotalCostStrToInt(myCart);
-        double productTotal = productService.getTotalProductPrice(product_id, quantity);
-        double newPrice = currPrice + productTotal;
-        String newPriceStr = String.format("%.2f", newPrice);
-        System.out.println("New supposed price: " + cartService.updateCartPrice(myCart, newPriceStr).getTotal_cost());
+        caculateTotal(myCart);
+        // double currPrice = CartService.convertCartTotalCostStrToInt(myCart);
+        // double productTotal = productService.getTotalProductPrice(product_id, quantity);
+        // double newPrice = currPrice + productTotal;
+        // String newPriceStr = String.format("%.2f", newPrice);
+        // System.out.println("New supposed price: " + cartService.updateCartPrice(myCart, newPriceStr).getTotal_cost());
         return cH;
     }
 
