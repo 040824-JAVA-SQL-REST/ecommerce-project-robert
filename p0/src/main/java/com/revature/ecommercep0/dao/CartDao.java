@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.ecommercep0.model.Cart;
@@ -63,6 +64,22 @@ public class CartDao implements CrudDao<Cart> {
     public List<Cart> findAll() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+    }
+    public List<Cart> findAllCartsByUserId (String user_id) {
+        List<Cart> allCartsOfUser = new ArrayList<>();    
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM cart where user_id = ?");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Cart newCart = new Cart(rs.getString("id"), user_id,rs.getString("total_cost"), rs.getBoolean("is_checkedout") );
+                allCartsOfUser.add(newCart);
+            }
+        } catch(SQLException e) {
+            throw new RuntimeException("CAnnot connect to the database");
+        } catch(IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        return allCartsOfUser;
     }
 
     @Override

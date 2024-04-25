@@ -43,7 +43,7 @@ public class AdminScreen extends BaseScreen {
             System.out.println("Welcome Admin " + session.getFname());
             // Order newOrder = new Order( "66.66", "PENDING", "1");
             
-            Cart myCart = cartService.findCartByUserID(session.getId());
+            Cart myCart = cartService.getActiveCartFromUser(session.getId());
             
             System.out.println("This is my cart: " + myCart);
             System.out.println("User_id: " + session.getId());
@@ -81,7 +81,7 @@ public class AdminScreen extends BaseScreen {
     }
     private void printCartDetails(List<CartHistory> cartHistory) {
         for (CartHistory ch : cartHistory) {
-            Cart cart = cartService.findCartById(ch.getCart_id());
+            Cart cart = cartService.getActiveCartFromUser(ch.getCart_id());
             System.out.println("Order Details--"+"user: " + cart.getUser_id() + ", product: " + productService.findProductById(ch.getProduct_id()).getName() +", Total price: " + cart.getTotal_cost() + ", quantity: " + ch.getQuantity());
         }
     }

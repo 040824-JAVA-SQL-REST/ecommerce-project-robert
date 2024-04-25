@@ -16,17 +16,24 @@ public class CartService {
     }
 
     public Cart createNewCart(Cart cart) {
-        Cart isFound = cartDao.findByUserId(cart.getUser_id());
+        //have to check for list<CarT> per user to make sure if theres a cart thats not checked-out
+        Cart isFound = getActiveCartFromUser(cart.getUser_id());
         if (isFound == null) { // if cart isnt already in the db, we save it
             return cartDao.save(cart);
         }
-
+        System.out.println("Theres a cart already active!");
         return null; // otherwise returns null, indicating failure
     }
-
-    public Cart findCartByUserID(String user_id) {
-        return cartDao.findByUserId(user_id);
+    public Cart getActiveCartFromUser(String user_id) {
+        Cart activeCart = null;
+        for (Cart c: cartDao.findAllCartsByUserId(user_id)) {
+            if (!c.isIs_CheckedOut()) {
+                return c;
+            }
+        }
+        return activeCart;
     }
+
     public void viewCart(Cart cart) {
         //TODO: View Cart: Provide functionality for users to view the contents of their cart, 
         // including item details and total cost.
@@ -55,10 +62,4 @@ public class CartService {
     public static double convertCostStrToInt(String price) {
         return Double.parseDouble(price);
     }
-    // public static double getTotalProductPrice(String product_id, String quantity)
-    // {
-    // return CartService.convertCostStrToInt(quantity) *
-    // CartService.convertCostStrToInt(productService.findProductById(product_id).getPrice())
-
-    // }
 }
