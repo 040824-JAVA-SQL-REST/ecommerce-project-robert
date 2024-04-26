@@ -12,6 +12,10 @@ public class Role {
         this.role_id = UUID.randomUUID().toString();
         this.name = name;
     }
+    public Role(String role_id, String name) {
+        this.role_id = role_id;
+        this.name = name;
+    }
     public String getName() {
         return name;
     }
