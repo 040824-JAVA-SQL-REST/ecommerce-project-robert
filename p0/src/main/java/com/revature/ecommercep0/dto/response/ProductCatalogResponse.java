@@ -1,19 +1,18 @@
-package com.revature.ecommercep0.dto.request;
+package com.revature.ecommercep0.dto.response;
 
-public class NewProductRequest {
+public class ProductCatalogResponse {
     private String name;
     private String description;
     private String price;
     private String category;
-    private boolean isAvailable;
-    public NewProductRequest() {
+    
+    public ProductCatalogResponse() {
     }
-    public NewProductRequest(String name, String description, String price, String category, boolean isAvailable) {
+    public ProductCatalogResponse(String name, String description, String price, String category) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.category = category;
-        this.isAvailable = isAvailable;
     }
     public String getName() {
         return name;
@@ -38,12 +37,6 @@ public class NewProductRequest {
     }
     public void setCategory(String category) {
         this.category = category;
-    }
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-    public void setAvailable(boolean isAvailable) {
-        this.isAvailable = isAvailable;
     }
     
     

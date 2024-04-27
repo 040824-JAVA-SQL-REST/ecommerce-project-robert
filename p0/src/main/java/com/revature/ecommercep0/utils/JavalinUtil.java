@@ -41,7 +41,16 @@ public class JavalinUtil {
                 });
                 path("/products", () -> {
                     post(productController::addProductToCatalog);
+                    get(productController::getAllProducts);
+
                 });
+                path("/products/{productId}", () -> {
+                    put(productController::updateProduct);
+                    post(productController::deleteProduct);
+                });
+                // path("/products/{name}", () -> {
+                //     post(productController::deleteProduct);
+                // });
             });
         });
     }

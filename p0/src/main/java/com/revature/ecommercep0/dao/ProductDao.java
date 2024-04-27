@@ -34,8 +34,27 @@ public class ProductDao implements CrudDao<Product> {
     }
 
     @Override
-    public Product update(Product obj) {
-        return null;
+    public Product update(Product product) {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(
+                        "UPDATE products SET name = ?, description = ?, price = ?, category = ? WHERE id = ?")) {
+            ps.setString(1, product.getName());
+            ps.setString(2, product.getDescription());
+            ps.setString(3, product.getPrice());
+            ps.setString(4, product.getCategory());
+            ps.setString(5, product.getId());
+
+            int rowsUpdated = ps.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new RuntimeException("Failed to update product with ID: " + product.getId());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating product: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        return findById(product.getId());
     }
 
     @Override
@@ -90,7 +109,7 @@ public class ProductDao implements CrudDao<Product> {
         return newProduct;
     }
 
-    public Product updateProductColumnByName(String column, String newColumnValue, String name) { 
+    public Product updateProductColumnByName(String column, String newColumnValue, String name) {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String query = "UPDATE products SET " + column + " = ? where name = ?";
             PreparedStatement ps = conn.prepareStatement(query);
@@ -107,12 +126,12 @@ public class ProductDao implements CrudDao<Product> {
         return findByName(name);
     }
 
-    public void updateProductAvailabilityByName(String name, boolean newStatus) {
+    public boolean updateProductAvailabilityByName(String name, boolean newStatus) {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             PreparedStatement ps = conn.prepareStatement("UPDATE products SET is_Available = ? where name = ?");
             ps.setBoolean(1, newStatus);
             ps.setString(2, name);
-            ps.executeUpdate();
+            return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
             throw new RuntimeException("CAnnot connect to the database");
@@ -121,15 +140,15 @@ public class ProductDao implements CrudDao<Product> {
         }
     }
 
-    public void updateProductNameByName(String name, String newProductName) {
+    public boolean updateProductAvailabilityById(String id, boolean newStatus) {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("UPDATE products SET name = ? where name = ?");
-            ps.setString(1, newProductName);
-            ps.setString(2, name);
-            ps.executeUpdate();
+            PreparedStatement ps = conn.prepareStatement("UPDATE products SET is_Available = ? WHERE id = ?");
+            ps.setBoolean(1, newStatus);
+            ps.setString(2, id);
+            return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            throw new RuntimeException("CAnnot connect to the database");
+            throw new RuntimeException("Cannot connect to the database");
         } catch (IOException e) {
             throw new RuntimeException("Cannot find application.properties file");
         }

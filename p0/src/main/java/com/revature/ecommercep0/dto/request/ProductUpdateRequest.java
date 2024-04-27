@@ -1,14 +1,15 @@
 package com.revature.ecommercep0.dto.request;
 
-public class NewProductRequest {
+public class ProductUpdateRequest {
     private String name;
     private String description;
     private String price;
     private String category;
     private boolean isAvailable;
-    public NewProductRequest() {
+    public ProductUpdateRequest() {
+
     }
-    public NewProductRequest(String name, String description, String price, String category, boolean isAvailable) {
+    public ProductUpdateRequest(String name, String description, String price, String category, boolean isAvailable) {
         this.name = name;
         this.description = description;
         this.price = price;
