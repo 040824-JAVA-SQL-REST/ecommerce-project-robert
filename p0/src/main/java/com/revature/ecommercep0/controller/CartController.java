@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.revature.ecommercep0.dto.request.AddProductToCartRequest;
+import com.revature.ecommercep0.dto.request.UpdateCartQuantityRequest;
 import com.revature.ecommercep0.dto.response.CartItemResponse;
 import com.revature.ecommercep0.dto.response.Principal;
 import com.revature.ecommercep0.model.Cart;
@@ -28,6 +29,86 @@ public class CartController {
         this.cartHistoryService = cartHistoryService;
         this.tokenService = tokenService;
         this.cartService = cartService;
+    }
+
+    public void updateCartProductQuantity(Context ctx) {
+        try {
+            Map<String, String> errors = new HashMap<>();
+
+            // Get token from the header
+            String token = ctx.header("auth-token");
+
+            // Validate token
+            if (token == null || token.isEmpty()) {
+                ctx.status(401); // Unauthorized
+                errors.put("Error: ", "Your token is not valid");
+                ctx.json(errors);
+                return;
+            }
+
+            // Now we parse the token to get the principal(auth)
+            Principal principal = tokenService.parseToken(token);
+            if (principal == null) {
+                ctx.status(401);
+                errors.put("Error: ", "Your token is not valid");
+                return;
+            }
+
+            // Make sure user is admin
+            if (!principal.getRole().getName().equalsIgnoreCase("ADMIN")
+                    && !principal.getRole().getName().equalsIgnoreCase("USER")) {
+                ctx.status(403); // Forbidden
+                errors.put("Error: ", "You do not have access to do this.");
+                return;
+            }
+
+            Cart myCart = cartService.getActiveCartFromUser(principal.getId());
+
+            if (myCart == null) {
+                myCart = new Cart(myCart.getId());
+                cartService.createNewCart(myCart);
+            }
+            System.out.println("Cart ID: " + myCart.getId());
+
+            // AddProductToCartRequest addProductToCartRequest =
+            // ctx.bodyAsClass(AddProductToCartRequest.class);
+            UpdateCartQuantityRequest updateCartQuantityRequest = ctx.bodyAsClass(UpdateCartQuantityRequest.class);
+
+            // Make sure product(id) exists.
+            if (cartHistoryService.getProductService()
+                    .findProductById(updateCartQuantityRequest.getProductId()) == null) {
+                ctx.status(400); // Bad Request
+                errors.put("Error: ", "Product doesn't exist.");
+                ctx.json(errors);
+                return;
+            }
+
+            // Make sure cart doesnt contain product.
+            if (!cartHistoryService.containsProduct(updateCartQuantityRequest.getProductId(), myCart.getId())) {
+                ctx.status(400); // Bad Request
+                errors.put("Error: ", "Product doesn't exist in cart.");
+                ctx.json(errors);
+                return;
+            }
+
+            // Make sure quantity is not negative
+            if (Integer.parseInt(updateCartQuantityRequest.getQuantity()) < 0) {
+                ctx.status(400);
+                errors.put("Error: ", "Quantity must be at least 1.");
+                ctx.json(errors);
+            }
+
+            CartHistory updatedEntry = cartHistoryService.updateCartProductQuantity(myCart,
+                    updateCartQuantityRequest.getProductId(), updateCartQuantityRequest.getQuantity());
+
+            ctx.status(200).json(updatedEntry);
+
+            // Have to work on it because i realized the steps hes on now doesnt apply to
+            // CartController aka being an admin has nothign to do with role
+        } catch (Exception e) {
+            ctx.status(500);
+            e.printStackTrace();
+        }
     }
 
     public void getAllProductsInCart(Context ctx) {
@@ -137,6 +218,13 @@ public class CartController {
                 errors.put("Error: ", "Product already exists in cart.");
                 ctx.json(errors);
                 return;
+            }
+
+            // Make sure quantity is not negative
+            if (Integer.parseInt(addProductToCartRequest.getQuantity()) < 0) {
+                ctx.status(400);
+                errors.put("Error: ", "Quantity must be at least 1.");
+                ctx.json(errors);
             }
 
             CartHistory ch = cartHistoryService.addToCart(myCart.getId(), addProductToCartRequest.getProductId(),

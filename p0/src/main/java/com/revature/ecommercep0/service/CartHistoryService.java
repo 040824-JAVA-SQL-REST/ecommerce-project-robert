@@ -40,16 +40,14 @@ public class CartHistoryService {
     public CartHistory updateCartProductQuantity(Cart cart, String product_id, String newQuantity) {
         // TOOD: Allow users to update the quantity of items in their cart or remove
         // items altogether.
-        CartHistory ch = null;
-        int newQuant = Integer.parseInt(newQuantity);
-        if (newQuant < 0) {
-            System.out.println("Quantity must be at least 0");
-            return ch;
-        } else if (newQuant == Integer.parseInt(productService.findProductById(product_id).getPrice())) {
-            System.out.println("Quantity is the same!");
-            return ch;
+        CartHistory ch = cartHistoryDao.updateCartProductQuantity(cart, product_id, newQuantity);
+        if (ch != null) {
+            caculateTotal(cart);
+            return cartHistoryDao.updateCartProductQuantity(cart, product_id, newQuantity);
         }
-        return ch;
+        return null;
+        
+        
     }
 
     public String caculateTotal(Cart cart) {

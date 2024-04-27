@@ -39,6 +39,7 @@ public class JavalinUtil {
                 path("/cart", () -> {
                     post(cartController::addProductToCart);
                     get(cartController::getAllProductsInCart);
+                    post("/update-quantity", cartController::updateCartProductQuantity);
                 });
                 path("/products", () -> {
                     post(productController::addProductToCatalog);
@@ -50,9 +51,6 @@ public class JavalinUtil {
                     post(productController::deleteProduct);
                 });
 
-                // path("/products/{name}", () -> {
-                //     post(productController::deleteProduct);
-                // });
             });
         });
     }

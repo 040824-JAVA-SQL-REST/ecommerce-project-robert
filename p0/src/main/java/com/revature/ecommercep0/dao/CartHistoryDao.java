@@ -12,7 +12,6 @@ import com.revature.ecommercep0.model.Cart;
 import com.revature.ecommercep0.model.CartHistory;
 import com.revature.ecommercep0.utils.ConnectionFactory;
 
-
 public class CartHistoryDao implements CrudDao<CartHistory> {
     @Override
     public CartHistory save(CartHistory obj) {
@@ -25,7 +24,8 @@ public class CartHistoryDao implements CrudDao<CartHistory> {
             ps.setString(3, obj.getQuantity());
             int rowsUpdated = ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("CAnnot connect to the database, or item is already in cart please update by quantity.");
+            throw new RuntimeException(
+                    "CAnnot connect to the database, or item is already in cart please update by quantity.");
         } catch (IOException e) {
             throw new RuntimeException("Cannot find application.properties file");
         }
@@ -37,6 +37,7 @@ public class CartHistoryDao implements CrudDao<CartHistory> {
         return null;
 
     }
+
     public List<CartItemResponse> findAllProductsByCart(String cart_id) {
         List<CartItemResponse> allProductsByCart = new ArrayList<>();
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
@@ -44,7 +45,10 @@ public class CartHistoryDao implements CrudDao<CartHistory> {
             ps.setString(1, cart_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                CartItemResponse newProductEntry = new CartItemResponse(rs.getString("product_name"), rs.getString("product_description"), rs.getString("product_price"), rs.getString("product_category"), rs.getString("product_quantity"), rs.getString("total_price"));
+                CartItemResponse newProductEntry = new CartItemResponse(rs.getString("product_name"),
+                        rs.getString("product_description"), rs.getString("product_price"),
+                        rs.getString("product_category"), rs.getString("product_quantity"),
+                        rs.getString("total_price"));
                 allProductsByCart.add(newProductEntry);
             }
         } catch (SQLException e) {
@@ -54,9 +58,11 @@ public class CartHistoryDao implements CrudDao<CartHistory> {
         }
         return allProductsByCart;
     }
-    public CartHistory updateCartProductQuantity (Cart cart, String product_id, String newQuantity) {
+
+    public CartHistory updateCartProductQuantity(Cart cart, String product_id, String newQuantity) {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("UPDATE cart SET quantity = ? where product_id = ? AND cart_id = ?");
+            PreparedStatement ps = conn
+                    .prepareStatement("UPDATE cart_product SET quantity = ? where product_id = ? AND cart_id = ?");
             ps.setString(1, newQuantity);
             ps.setString(2, product_id);
             ps.setString(3, cart.getId());
@@ -103,6 +109,26 @@ public class CartHistoryDao implements CrudDao<CartHistory> {
         }
         return newCartHistory;
     }
+
+    public CartHistory findProductQuantityByProductAndCart(String cart_id, String product_id) {
+        CartHistory newCartHistory = null;
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM cart_product where cart_id = ? AND product_id = ?");
+            ps.setString(1, cart_id);
+            ps.setString(2, product_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                newCartHistory = new CartHistory(cart_id, rs.getString("product_id"), rs.getString("quantity"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("CAnnot connect to the database");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        return newCartHistory;
+
+    }
+
     public List<CartHistory> findCartHistoryById(String cart_id) {
         List<CartHistory> newCartHistory = new ArrayList<>();
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
@@ -110,7 +136,8 @@ public class CartHistoryDao implements CrudDao<CartHistory> {
             ps.setString(1, cart_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                CartHistory newCartEntry = new CartHistory(cart_id, rs.getString("product_id"), rs.getString("quantity"));
+                CartHistory newCartEntry = new CartHistory(cart_id, rs.getString("product_id"),
+                        rs.getString("quantity"));
                 newCartHistory.add(newCartEntry);
             }
         } catch (SQLException e) {
