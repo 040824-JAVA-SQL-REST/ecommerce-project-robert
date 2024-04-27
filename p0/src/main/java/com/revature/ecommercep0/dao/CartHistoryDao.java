@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.ecommercep0.dto.response.CartItemResponse;
 import com.revature.ecommercep0.model.Cart;
 import com.revature.ecommercep0.model.CartHistory;
 import com.revature.ecommercep0.utils.ConnectionFactory;
@@ -35,6 +36,23 @@ public class CartHistoryDao implements CrudDao<CartHistory> {
     public CartHistory update(CartHistory obj) {
         return null;
 
+    }
+    public List<CartItemResponse> findAllProductsByCart(String cart_id) {
+        List<CartItemResponse> allProductsByCart = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM view_cart_items where cart_id = ?");
+            ps.setString(1, cart_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                CartItemResponse newProductEntry = new CartItemResponse(rs.getString("product_name"), rs.getString("product_description"), rs.getString("product_price"), rs.getString("product_category"), rs.getString("product_quantity"), rs.getString("total_price"));
+                allProductsByCart.add(newProductEntry);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("CAnnot connect to the database");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        return allProductsByCart;
     }
     public CartHistory updateCartProductQuantity (Cart cart, String product_id, String newQuantity) {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {

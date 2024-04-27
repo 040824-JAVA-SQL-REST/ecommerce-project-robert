@@ -3,6 +3,7 @@ package com.revature.ecommercep0.service;
 import java.util.List;
 
 import com.revature.ecommercep0.dao.CartHistoryDao;
+import com.revature.ecommercep0.dto.response.CartItemResponse;
 import com.revature.ecommercep0.model.Cart;
 import com.revature.ecommercep0.model.CartHistory;
 import com.revature.ecommercep0.model.Product;
@@ -16,6 +17,18 @@ public class CartHistoryService {
         this.cartHistoryDao = cartHistoryDao;
         this.cartService = cartService;
         this.productService = productService;
+    }
+    public boolean containsProduct(String product_id, String cart_id) {
+        for (CartHistory cartEntry : retrieveCartHistoryById(cart_id)) {
+            System.out.println("Products in cart: " + cartEntry.getProduct_id());
+            if (cartEntry.getProduct_id().equals(product_id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public List<CartItemResponse> viewCart(String cart_id) {
+       return cartHistoryDao.findAllProductsByCart(cart_id);
     }
 
     public List<CartHistory> retrieveCartHistoryById(String cart_id) {
@@ -36,9 +49,7 @@ public class CartHistoryService {
             System.out.println("Quantity is the same!");
             return ch;
         }
-
         return ch;
-
     }
 
     public String caculateTotal(Cart cart) {
@@ -64,7 +75,6 @@ public class CartHistoryService {
 
          cartService.updateCartPrice(cart, totalCartPrice);
         return totalCartPrice;
-
     }
 
     public CartHistory addToCart(String cart_id, String product_id, String quantity) {
@@ -73,12 +83,10 @@ public class CartHistoryService {
             return null;
         CartHistory cH = cartHistoryDao.save(new CartHistory(cart_id, product_id, quantity));
         caculateTotal(myCart);
-        // double currPrice = CartService.convertCartTotalCostStrToInt(myCart);
-        // double productTotal = productService.getTotalProductPrice(product_id, quantity);
-        // double newPrice = currPrice + productTotal;
-        // String newPriceStr = String.format("%.2f", newPrice);
-        // System.out.println("New supposed price: " + cartService.updateCartPrice(myCart, newPriceStr).getTotal_cost());
         return cH;
+    }
+    public ProductService getProductService() {
+        return this.productService;
     }
 
 }

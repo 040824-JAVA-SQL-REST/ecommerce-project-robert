@@ -1,10 +1,13 @@
 drop table if exists order_product cascade;
 drop table if exists users;
-drop table if exists roles;
 drop table if exists orders;
 drop table if exists products;
 drop view if exists view_order_history;
+drop view if exists users_with_role;
+drop view if exists view_cart_items;
 
+
+drop table if exists roles;
 --DDL SCRIPT --
 
 create table roles (
@@ -61,9 +64,19 @@ create table cart_product(
 	constraint fk_cart_id foreign key (cart_id) references cart(id),
 	constraint fk_product_id foreign key (product_id) references products (id)
 )
+
 create view view_cart_items as 
-select c.id as cart_id, c.user_id as user_id, p.id as product_id, p.name as product_name, p.price as product_price, f.quantity as product_quantity
-from cart_product f join cart c on f.cart_id = c.id 
+select c.id as cart_id, p.name as product_name, p.description as product_description, p.price as product_price, p.category as product_category, f.quantity as product_quantity, c.total_cost as total_price
+from cart_product f 
+join cart c on f.cart_id = c.id 
+join users u on c.user_id = u.id
+join products p on f.product_id = p.id;
+
+create view view_cart_items_for_debugging as 
+select c.id as cart_id, c.user_id as user_id, u.email as user_email, p.id as product_id, p.name as product_name, p.price as product_price, f.quantity as product_quantity
+from cart_product f 
+join cart c on f.cart_id = c.id 
+join users u on c.user_id = u.id
 join products p on f.product_id = p.id;
 
 create table order_product(
@@ -79,3 +92,15 @@ create view view_order_history as
 select o.id as order_id, o.user_id as user_id, p.id as product_id, p.name as product_name, p.price as product_price, f.quantity as product_quantity
 from order_product f join orders o on f.order_id = o.id 
 join products p on f.product_id = p.id;
+
+create view users_with_role as
+select 
+	u.id,
+	u.email,
+	u.password,
+	u.firstname,
+	u.lastname,
+	r.id as role_id,
+	r.name as role_name
+from users u
+join roles r on r.id = u.role_id;

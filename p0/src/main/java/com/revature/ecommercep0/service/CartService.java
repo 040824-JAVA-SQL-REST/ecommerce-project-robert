@@ -24,6 +24,7 @@ public class CartService {
         System.out.println("Theres a cart already active!");
         return null; // otherwise returns null, indicating failure
     }
+    
     public Cart getActiveCartFromUser(String user_id) {
         Cart activeCart = null;
         for (Cart c: cartDao.findAllCartsByUserId(user_id)) {
