@@ -8,8 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.ecommercep0.dto.response.AdminOrderItemResponse;
 import com.revature.ecommercep0.dto.response.UserOrderItemResponse;
 import com.revature.ecommercep0.model.OrderHistory;
+import com.revature.ecommercep0.model.Product;
 import com.revature.ecommercep0.utils.ConnectionFactory;
 
 public class OrderHistoryDao implements CrudDao<OrderHistory> {
@@ -61,6 +63,7 @@ public class OrderHistoryDao implements CrudDao<OrderHistory> {
         }
         return allHistories;
     }
+    
  
     public List<OrderHistory> findAllOrdersById(String order_id) {
         List<OrderHistory> allProductsByOrders = new ArrayList<>();
@@ -97,6 +100,41 @@ public class OrderHistoryDao implements CrudDao<OrderHistory> {
             throw new RuntimeException("Cannot find application.properties file");
         }
         return allProductsByOrders;
+    }
+    public List<String> getAllProductsIdsByOrder (String order_id) {
+        List<String> allProductIdsByOrder = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM order_product where order_id = ?");
+            ps.setString(1, order_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String product_id = rs.getString("product_id");
+                allProductIdsByOrder.add(product_id);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("CAnnot connect to the database");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        return allProductIdsByOrder;
+    }
+    public List<AdminOrderItemResponse> findAllOrdersForAdmin() {
+        List<AdminOrderItemResponse> allOrders = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT DISTINCT * FROM view_order_history_for_admin");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String name = rs.getString("first_name") + " " + rs.getString("last_name");
+                AdminOrderItemResponse newOrderEntry = new AdminOrderItemResponse(rs.getString("order_id"), name, rs.getString("total_price"),
+                        rs.getString("order_status"));
+                allOrders.add(newOrderEntry);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("CAnnot connect to the database");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        return allOrders;
     }
 
     @Override

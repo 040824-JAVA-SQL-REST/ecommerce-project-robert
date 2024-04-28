@@ -58,6 +58,7 @@ public class JavalinUtil {
                 });
                 path("/orders", () -> {
                     get("/my-order-history", orderController::getOrders);
+                    get("/all", orderController::getAllOrders);
                    // post(productController::deleteProduct);
                 });
 

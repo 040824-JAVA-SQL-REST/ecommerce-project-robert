@@ -1,8 +1,10 @@
 package com.revature.ecommercep0.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.ecommercep0.dao.OrderHistoryDao;
+import com.revature.ecommercep0.dto.response.AdminOrderItemResponse;
 import com.revature.ecommercep0.dto.response.UserOrderItemResponse;
 import com.revature.ecommercep0.model.Order;
 import com.revature.ecommercep0.model.OrderHistory;
@@ -22,6 +24,18 @@ public class OrderHistoryService {
     public Order createNewOrder(Order order) {
         return orderService.createNewOrder(order);
     }
+    public List<AdminOrderItemResponse> getAllOrders() {
+        List<AdminOrderItemResponse> allOrders = orderHistoryDao.findAllOrdersForAdmin();
+        for (AdminOrderItemResponse order : allOrders) {
+            List<Product> allProductsByOrder = new ArrayList<>();
+            for (String productId : orderHistoryDao.getAllProductsIdsByOrder(order.getOrder_id())) {
+                allProductsByOrder.add(productService.findProductById(productId));
+            }
+            order.setItemsPurchased(allProductsByOrder);
+        }
+        return allOrders;
+    }
+    
     public OrderHistory addProductToOrder(OrderHistory orderHistory) {
         return orderHistoryDao.save(orderHistory);
     }

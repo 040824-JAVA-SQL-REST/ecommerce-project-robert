@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.revature.ecommercep0.dto.response.AdminOrderItemResponse;
 import com.revature.ecommercep0.dto.response.Principal;
 import com.revature.ecommercep0.dto.response.UserOrderItemResponse;
 import com.revature.ecommercep0.service.OrderHistoryService;
@@ -23,6 +24,45 @@ public class OrderController {
         this.orderHistoryService = orderHistoryService;
         this.tokenService = tokenService;
     }
+    public void getAllOrders(Context ctx) {
+        try {
+            Map<String, String> errors = new HashMap<>();
+
+            // Get token from the header
+            String token = ctx.header("auth-token");
+
+            // Validate token
+            if (token == null || token.isEmpty()) {
+                ctx.status(401); // Unauthorized
+                errors.put("Error: ", "Your token is not valid");
+                ctx.json(errors);
+                return;
+            }
+
+            // Now we parse the token to get the principal(auth)
+            Principal principal = tokenService.parseToken(token);
+            if (principal == null) {
+                ctx.status(401);
+                errors.put("Error: ", "Your token is not valid");
+                return;
+            }
+
+            // Make sure user is admin
+            if (!principal.getRole().getName().equalsIgnoreCase("ADMIN")) {
+                ctx.status(403); // Forbidden
+                errors.put("Error: ", "You do not have access to do this.");
+                return;
+            }
+
+            List<AdminOrderItemResponse> allOrders = orderHistoryService.getAllOrders();
+            
+            ctx.status(200).json(allOrders);
+        } catch (Exception e) {
+           ctx.status(500);
+           e.printStackTrace();
+        }
+    }
+    
     public void getOrders(Context ctx) {
         try {
             Map<String, String> errors = new HashMap<>();
