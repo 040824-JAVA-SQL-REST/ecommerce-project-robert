@@ -111,7 +111,7 @@ public class ProductController {
             List<ProductCatalogResponse> productCatalog = new ArrayList<>();
 
             for (Product product: products) {
-                ProductCatalogResponse productCatalogResponse = new ProductCatalogResponse(product.getName(), product.getDescription(), product.getPrice(), product.getCategory());
+                ProductCatalogResponse productCatalogResponse = new ProductCatalogResponse(product.getId(), product.getName(), product.getDescription(), product.getPrice(), product.getCategory());
                 productCatalog.add(productCatalogResponse);
             }
 

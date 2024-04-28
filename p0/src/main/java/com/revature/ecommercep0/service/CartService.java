@@ -35,19 +35,13 @@ public class CartService {
         return activeCart;
     }
 
-    public void viewCart(Cart cart) {
-        //TODO: View Cart: Provide functionality for users to view the contents of their cart, 
-        // including item details and total cost.
-    }
  
     public void deleteCart(Cart cart) {
         cart.setIs_CheckedOut(true);
         cartDao.update(cart);
-        
+
     }
-    public void clearCart(Cart cart) {
-        //TODO: Clear cart idk how to yet doe.
-    }
+
 
     public Cart updateCartPrice(Cart cart, String newPrice) {
         // double currentPrice = Double.parseDouble(cart.getTotal_cost());

@@ -1,6 +1,7 @@
 package com.revature.ecommercep0.dto.response;
 
 public class ProductCatalogResponse {
+    private String orderId;
     private String name;
     private String description;
     private String price;
@@ -8,12 +9,14 @@ public class ProductCatalogResponse {
     
     public ProductCatalogResponse() {
     }
-    public ProductCatalogResponse(String name, String description, String price, String category) {
+    public ProductCatalogResponse(String orderId, String name, String description, String price, String category) {
+        this.orderId = orderId;
         this.name = name;
         this.description = description;
         this.price = price;
         this.category = category;
     }
+    
     public String getName() {
         return name;
     }
@@ -37,6 +40,12 @@ public class ProductCatalogResponse {
     }
     public void setCategory(String category) {
         this.category = category;
+    }
+    public String getOrderId() {
+        return orderId;
+    }
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
     
     
