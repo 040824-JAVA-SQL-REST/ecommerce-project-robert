@@ -24,7 +24,7 @@ public class CartService {
         System.out.println("Theres a cart already active!");
         return null; // otherwise returns null, indicating failure
     }
-    
+
     public Cart getActiveCartFromUser(String user_id) {
         Cart activeCart = null;
         for (Cart c: cartDao.findAllCartsByUserId(user_id)) {
@@ -40,8 +40,10 @@ public class CartService {
         // including item details and total cost.
     }
  
-    public void updateCart(Cart cart) {
-        //TOOD: Allow users to update the quantity of items in their cart or remove items altogether.
+    public void deleteCart(Cart cart) {
+        cart.setIs_CheckedOut(true);
+        cartDao.update(cart);
+        
     }
     public void clearCart(Cart cart) {
         //TODO: Clear cart idk how to yet doe.

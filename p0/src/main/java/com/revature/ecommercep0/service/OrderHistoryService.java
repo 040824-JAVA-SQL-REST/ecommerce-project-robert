@@ -19,6 +19,12 @@ public class OrderHistoryService {
         this.productService = productService;
         this.orderHistoryDao = orderHistoryDao;
     }
+    public Order createNewOrder(Order order) {
+        return orderService.createNewOrder(order);
+    }
+    public OrderHistory addProductToOrder(OrderHistory orderHistory) {
+        return orderHistoryDao.save(orderHistory);
+    }
 
     public List<OrderHistory> allProductEntriesByOrder(String order_id) {
         List<OrderHistory> allProductEntries = orderHistoryDao.findAllOrdersById(order_id);

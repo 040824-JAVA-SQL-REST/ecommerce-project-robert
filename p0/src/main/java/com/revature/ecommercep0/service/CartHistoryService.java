@@ -6,18 +6,24 @@ import com.revature.ecommercep0.dao.CartHistoryDao;
 import com.revature.ecommercep0.dto.response.CartItemResponse;
 import com.revature.ecommercep0.model.Cart;
 import com.revature.ecommercep0.model.CartHistory;
+import com.revature.ecommercep0.model.Order;
+import com.revature.ecommercep0.model.OrderHistory;
 import com.revature.ecommercep0.model.Product;
 
 public class CartHistoryService {
     private CartHistoryDao cartHistoryDao;
     private CartService cartService;
     private ProductService productService;
+    private OrderHistoryService orderHistoryService;
 
-    public CartHistoryService(CartHistoryDao cartHistoryDao, CartService cartService, ProductService productService) {
+    public CartHistoryService(CartHistoryDao cartHistoryDao, CartService cartService, ProductService productService,
+            OrderHistoryService orderHistoryService) {
         this.cartHistoryDao = cartHistoryDao;
         this.cartService = cartService;
         this.productService = productService;
+        this.orderHistoryService = orderHistoryService;
     }
+
     public boolean containsProduct(String product_id, String cart_id) {
         for (CartHistory cartEntry : retrieveCartHistoryById(cart_id)) {
             System.out.println("Products in cart: " + cartEntry.getProduct_id());
@@ -30,6 +36,7 @@ public class CartHistoryService {
     public List<CartItemResponse> viewCart(String cart_id) {
        return cartHistoryDao.findAllProductsByCart(cart_id);
     }
+
 
     public List<CartHistory> retrieveCartHistoryById(String cart_id) {
         List<CartHistory> cartHistory = cartHistoryDao.findCartHistoryById(cart_id);
@@ -45,8 +52,7 @@ public class CartHistoryService {
             caculateTotal(cart);
             return cartHistoryDao.updateCartProductQuantity(cart, product_id, newQuantity);
         }
-        return null;
-          
+        return null;  
     }
 
     public String caculateTotal(Cart cart) {
@@ -81,6 +87,17 @@ public class CartHistoryService {
         CartHistory cH = cartHistoryDao.save(new CartHistory(cart_id, product_id, quantity));
         caculateTotal(myCart);
         return cH;
+    }
+    public Order checkoutCart(Cart cart) {
+        List<CartHistory> allCartEntriesByUser = retrieveCartHistoryById(cart.getId());
+        Order newOrder = orderHistoryService.createNewOrder(new Order(cart.getTotal_cost(),"PENDING" , cart.getUser_id()));
+        for (CartHistory cH : allCartEntriesByUser) {
+            OrderHistory newOH = new OrderHistory(newOrder.getId(), cH.getProduct_id(), cH.getQuantity());
+            orderHistoryService.addProductToOrder(newOH);
+        }
+        cart.setIs_CheckedOut(true);
+        cartService.deleteCart(cart);
+        return newOrder;
     }
     public ProductService getProductService() {
         return this.productService;

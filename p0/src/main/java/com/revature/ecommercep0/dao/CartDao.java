@@ -50,8 +50,25 @@ public class CartDao implements CrudDao<Cart> {
 
     @Override
     public Cart update(Cart obj) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(
+                        "UPDATE cart SET user_id = ?, total_cost = ?, is_CheckedOut = ? WHERE id = ?")) {
+            ps.setString(1, obj.getUser_id());
+            ps.setString(2, obj.getTotal_cost());
+            ps.setBoolean(3, obj.isIs_CheckedOut());
+            ps.setString(4, obj.getId());
+
+            int rowsUpdated = ps.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new RuntimeException("Failed to update product with ID: " + obj.getId());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating product: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        return findById(obj.getId());
     }
 
     @Override
@@ -66,19 +83,20 @@ public class CartDao implements CrudDao<Cart> {
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
-    public List<Cart> findAllCartsByUserId (String user_id) {
-        List<Cart> allCartsOfUser = new ArrayList<>();    
+    public List<Cart> findAllCartsByUserId(String user_id) {
+        List<Cart> allCartsOfUser = new ArrayList<>();
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM cart where user_id = ?");
             ps.setString(1, user_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Cart newCart = new Cart(rs.getString("id"), user_id,rs.getString("total_cost"), rs.getBoolean("is_checkedout") );
+                Cart newCart = new Cart(rs.getString("id"), user_id, rs.getString("total_cost"),
+                        rs.getBoolean("is_checkedout"));
                 allCartsOfUser.add(newCart);
             }
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException("CAnnot connect to the database");
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Cannot find application.properties file");
         }
         return allCartsOfUser;
@@ -92,7 +110,8 @@ public class CartDao implements CrudDao<Cart> {
             ps.setString(1, cart_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                newCart = new Cart(rs.getString("id"), rs.getString("user_id"), rs.getString("total_cost"), rs.getBoolean("is_CheckedOut"));
+                newCart = new Cart(rs.getString("id"), rs.getString("user_id"), rs.getString("total_cost"),
+                        rs.getBoolean("is_CheckedOut"));
             }
         } catch (SQLException e) {
             throw new RuntimeException("CAnnot connect to the database");

@@ -12,6 +12,7 @@ import com.revature.ecommercep0.dto.response.CartItemResponse;
 import com.revature.ecommercep0.dto.response.Principal;
 import com.revature.ecommercep0.model.Cart;
 import com.revature.ecommercep0.model.CartHistory;
+import com.revature.ecommercep0.model.Order;
 import com.revature.ecommercep0.service.CartHistoryService;
 import com.revature.ecommercep0.service.CartService;
 import com.revature.ecommercep0.service.ProductService;
@@ -31,6 +32,56 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    public void checkout(Context ctx) {
+
+        try {
+            Map<String, String> errors = new HashMap<>();
+
+            // Get token from the header
+            String token = ctx.header("auth-token");
+
+            // Validate token
+            if (token == null || token.isEmpty()) {
+                ctx.status(401); // Unauthorized
+                errors.put("Error: ", "Your token is not valid");
+                ctx.json(errors);
+                return;
+            }
+
+            // Now we parse the token to get the principal(auth)
+            Principal principal = tokenService.parseToken(token);
+            if (principal == null) {
+                ctx.status(401);
+                errors.put("Error: ", "Your token is not valid");
+                return;
+            }
+
+            // Make sure user is admin
+            if (!principal.getRole().getName().equalsIgnoreCase("ADMIN")
+                    && !principal.getRole().getName().equalsIgnoreCase("USER")) {
+                ctx.status(403); // Forbidden
+                errors.put("Error: ", "You do not have access to do this.");
+                return;
+            }
+
+            Cart myCart = cartService.getActiveCartFromUser(principal.getId());
+
+            if (myCart == null) {
+                ctx.status(400);
+                errors.put("Error: ", "no active cart!");
+                ctx.json(errors);
+            }
+
+
+            Order newOrder = cartHistoryService.checkoutCart(myCart);
+            ctx.status(200);
+
+            
+        } catch (Exception e) {
+            ctx.status(500);
+            e.printStackTrace();
+        }
+    }
     public void updateCartProductQuantity(Context ctx) {
         try {
             Map<String, String> errors = new HashMap<>();
@@ -65,7 +116,7 @@ public class CartController {
             Cart myCart = cartService.getActiveCartFromUser(principal.getId());
 
             if (myCart == null) {
-                myCart = new Cart(myCart.getId());
+                myCart = new Cart(principal.getId());
                 cartService.createNewCart(myCart);
             }
             System.out.println("Cart ID: " + myCart.getId());
@@ -197,7 +248,7 @@ public class CartController {
             Cart myCart = cartService.getActiveCartFromUser(principal.getId());
 
             if (myCart == null) {
-                myCart = new Cart(myCart.getId());
+                myCart = new Cart(principal.getId());
                 cartService.createNewCart(myCart);
             }
 
