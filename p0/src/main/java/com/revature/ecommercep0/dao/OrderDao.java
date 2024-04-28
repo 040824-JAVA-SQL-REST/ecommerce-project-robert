@@ -24,7 +24,6 @@ public class OrderDao implements CrudDao<Order> {
             ps.setString(2, obj.getTotalPrice());
             ps.setString(3, obj.getStatus());
             ps.setString(4, obj.getUser_id());
-          //  ps.setString(5, obj.getUser_id());
             int rowsUpdated = ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("CAnnot connect to the database");
@@ -32,7 +31,39 @@ public class OrderDao implements CrudDao<Order> {
             throw new RuntimeException("Cannot find application.properties file");
         }
         return obj;
+    }
+    
+    public List<Order> findAllCartsByUserId (String user_id) {
+        List<Order> allOrdersOfUser = new ArrayList<>();    
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM orders where user_id = ?");
+            ps.setString(1, user_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order newOrder = new Order(rs.getString("id"),rs.getString("total_cost"), rs.getString("order_status"), rs.getDate("order_date"), user_id );
+                allOrdersOfUser.add(newOrder);
+            }
+        } catch(SQLException e) {
+            throw new RuntimeException("CAnnot connect to the database");
+        } catch(IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        return allOrdersOfUser;
+    }
+    public void updateOrderPriceById(String id, String newPrice) {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("UPDATE orders SET total_price = ? where id = ?");
+            ps.setString(1, newPrice);
+            ps.setString(2, id);
+            int result = ps.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new RuntimeException("CAnnot connect to the database");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        // Cart temp = findById(id);
+        // return temp;
     }
 
     public Order update(Order obj) {
@@ -65,11 +96,23 @@ public class OrderDao implements CrudDao<Order> {
             throw new RuntimeException("Cannot find application.properties file");
         }
         return allOrders;
-
     }
 
     public Order findById(String id) {
-        return null;
+        Order newOrder = null;
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM orders where id = ?");
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                newOrder = new Order(rs.getString("id"), rs.getString("total_price"), rs.getString("order_status"), rs.getDate("order_date"), rs.getString("user_id"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("CAnnot connect to the database");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties file");
+        }
+        return newOrder;
 
     }
 

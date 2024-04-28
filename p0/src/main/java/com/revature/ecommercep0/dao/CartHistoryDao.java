@@ -13,6 +13,7 @@ import com.revature.ecommercep0.model.CartHistory;
 import com.revature.ecommercep0.utils.ConnectionFactory;
 
 public class CartHistoryDao implements CrudDao<CartHistory> {
+
     @Override
     public CartHistory save(CartHistory obj) {
         try (Connection conn = ConnectionFactory.getInstance().getConnection();
@@ -70,26 +71,22 @@ public class CartHistoryDao implements CrudDao<CartHistory> {
             if (rowsUpdated == 0) {
                 throw new RuntimeException("Product not found in the cart or invalid cart_id/product_id");
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("CAnnot connect to the database");
         } catch (IOException e) {
             throw new RuntimeException("Cannot find application.properties file");
         }
         return findById(cart.getId());
-
     }
 
     @Override
     public CartHistory delete(String id) {
         return null;
-
     }
 
     @Override
     public List<CartHistory> findAll() {
         return null;
-
     }
 
     @Override

@@ -11,6 +11,9 @@ public class OrderService {
     public OrderService(OrderDao orderDao) {
         this.orderDao = orderDao;
     }
+    public Order findById(String cart_id) {
+        return orderDao.findById(cart_id);
+    }
     public Order createNewOrder(Order newOrder) {
         return orderDao.save(newOrder);
     }

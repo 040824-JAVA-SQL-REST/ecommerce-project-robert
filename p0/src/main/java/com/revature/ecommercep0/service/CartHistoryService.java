@@ -46,8 +46,7 @@ public class CartHistoryService {
             return cartHistoryDao.updateCartProductQuantity(cart, product_id, newQuantity);
         }
         return null;
-        
-        
+          
     }
 
     public String caculateTotal(Cart cart) {
