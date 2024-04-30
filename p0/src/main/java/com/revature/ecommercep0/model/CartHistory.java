@@ -10,6 +10,10 @@ public class CartHistory {
         this.product_id = product_id;
         this.quantity = quantity;
     }
+    
+    public CartHistory() {
+    }
+
     public String getCart_id() {
         return cart_id;
     }

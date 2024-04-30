@@ -61,7 +61,7 @@ public class UserService { // here we do validations for registration
 
     public boolean isAdmin(User user) {
         String currentRole = user.getRole_id();
-        if (currentRole.equals(roleService.getRoleIdByName("ADMIN"))) {
+        if (currentRole.equals("ADMIN")) {
             return true;
         }
         return false;

@@ -16,6 +16,10 @@ public class Cart {
         is_CheckedOut = false;
     }
 
+    public Cart() {
+    }
+
+
     public Cart(String id, String user_id, String total_cost, boolean is_CheckedOut) { //when retrieving info from db
         this.id = id;
         this.user_id = user_id;

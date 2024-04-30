@@ -13,7 +13,10 @@ public class User {
     private String role_id; //Foreign key to tie to roles table
     private Role role;
     
-
+    
+    public User(String role_id) {
+        this.role_id = role_id;
+    }
     public User(NewRegisterRequest req) {
         this.id = UUID.randomUUID().toString();
         this.email = req.getEmail();

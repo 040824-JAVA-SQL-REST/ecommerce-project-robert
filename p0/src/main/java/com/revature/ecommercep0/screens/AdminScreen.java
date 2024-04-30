@@ -73,7 +73,7 @@ public class AdminScreen extends BaseScreen {
             // productService.updateProductNameByName("apples", "oranges");
             // productService.enterNewProductIntoCatalog("Guanaba", "organic purple
             // guanaba", "$5.00", "produce");
-            System.out.println( productService.updateProductColumnById("category" , "livestock", productService.findProductById("2")));
+           // System.out.println( productService.updateProductColumnById("category" , "livestock", productService.findProductById("2")));
             printProductCatalog(productService.findAll());
             scan.nextLine();
 

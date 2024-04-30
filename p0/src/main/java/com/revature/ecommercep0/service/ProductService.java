@@ -50,9 +50,9 @@ public class ProductService {
         return null;
     }
 
-    public Product updateProductColumnById(String columnName, String newColumnValue, Product product) {
-        return productDao.updateProductColumnById(columnName, newColumnValue, product);
-    }
+    // public Product updateProductColumnById(String columnName, String newColumnValue, Product product) {
+    //     return productDao.updateProductColumnById(columnName, newColumnValue, product);
+    // }
 
     public Product updateProduct(String productId, ProductUpdateRequest updateRequest) {
         Product existingProduct = productDao.findById(productId);
@@ -92,9 +92,5 @@ public class ProductService {
         return false;
     }
 
-    public double getTotalProductPrice(String product_id, String quantity) {
-        return CartService.convertCostStrToInt(quantity)
-                * CartService.convertCostStrToInt(findProductById(product_id).getPrice());
-
-    }
+   
 }
