@@ -34,7 +34,9 @@ public class ProductService {
     }
 
     public Product enterNewProductIntoCatalog(String name, String description, String price, String category) {
+
         Product isFound = productDao.findByName(name);
+      //  System.out.println("Product in Service class: " + isFound);
         if (isFound != null) {
             if (retrieveDeletedProduct(name)) {
                 isFound.setAvailable(true);
@@ -42,9 +44,10 @@ public class ProductService {
             }
         }
         Product newProduct = new Product(name, description, price, category);
+       // System.out.println("NEW PRODUCT IN SERVICE: " + newProduct);
 
         if (isUniqueProductName(name)) {
-            System.out.println("Product entered!");
+          //  System.out.println("Product entered!");
             return productDao.save(newProduct);
         }
         return null;
@@ -83,13 +86,18 @@ public class ProductService {
     }
 
     public boolean isUniqueProductName(String name) {
+        Product product = productDao.findByName(name);
+
+        System.out.println("Product in isUniqueMethod:" + product);
         if (productDao.findByName(name) != null && !productDao.findByName(name).isAvailable()) {
+            System.out.println(false);
             return true;
         } else if (productDao.findByName(name) != null && productDao.findByName(name).isAvailable()) {
+            System.out.println("Is available");
             return false;
         }
-
-        return false;
+        System.out.println("EVerything else");
+        return true;
     }
 
    

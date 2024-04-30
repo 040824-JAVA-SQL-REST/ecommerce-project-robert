@@ -54,6 +54,8 @@ public class ProductController {
 
             // AUTH WORKS SO IF LOGGED IN USER IS ADMIN THEN WONT BE A PROBLEM!!!
             NewProductRequest req = ctx.bodyAsClass(NewProductRequest.class);
+         //   System.out.println("This is the product " + req);
+           // System.out.println(req.getName());
             if (req.getName().isEmpty()) {
                 ctx.status(400);
                 errors.put("Error: ", "Product name cannot be empty.");
@@ -64,14 +66,17 @@ public class ProductController {
                 ctx.status(409);
                 errors.put("Error: ", "Product name needs to be unique!");
                 ctx.json(errors);
+                return;
             }
 
+            System.out.println(req);
             Product producAdded = productService.enterNewProductIntoCatalog(req.getName(), req.getDescription(),
                     req.getPrice(),
                     req.getCategory()); // If it already exists, it just sets isAvailable to true;
+            System.out.println("After adding product: " + producAdded);
             ctx.status(201);
 
-            ctx.json(producAdded);
+           ctx.json(producAdded);
         } catch (Exception e) {
             ctx.status(500);
             e.printStackTrace();
@@ -116,6 +121,7 @@ public class ProductController {
             }
 
             // return the list of products as JSON
+          //  System.out.println(productCatalog);
             ctx.status(200).json(productCatalog);
         } catch (Exception e) {
             ctx.status(500).json("An error occurred while retrieving products");

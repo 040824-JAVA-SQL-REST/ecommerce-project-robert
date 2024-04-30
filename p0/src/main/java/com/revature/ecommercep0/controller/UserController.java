@@ -75,7 +75,7 @@ public class UserController {
             }
             if (!userService.isUniqueEmail(req.getEmail())) {
                 ctx.status(409); // Conflcit
-                errors.put("Error:  ", "Incorrect Email");
+                errors.put("Error:  ", "Email already exists");
                 ctx.json(errors);
                 return;
             }
