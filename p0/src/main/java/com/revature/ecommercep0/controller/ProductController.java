@@ -44,7 +44,7 @@ public class ProductController {
                 errors.put("Error: ", "Your token is not valid");
                 return;
             }
-
+            System.out.println("Current user is: " + principal.getRole().getName());
             // Make sure user is admin
             if (!principal.getRole().getName().equalsIgnoreCase("ADMIN")) {
                 ctx.status(403); // Forbidden

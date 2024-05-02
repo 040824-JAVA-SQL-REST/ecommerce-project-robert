@@ -266,7 +266,7 @@ public class CartController {
             // Make sure cart doesnt contain product.
             if (cartHistoryService.containsProduct(addProductToCartRequest.getProductId(), myCart.getId())) {
                 ctx.status(400); // Bad Request
-                errors.put("Error: ", "Product already exists in cart.");
+                errors.put("Error: ", "Product already exists in cart. Please update product quantity instead!");
                 ctx.json(errors);
                 return;
             }
